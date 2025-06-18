@@ -11,14 +11,17 @@ export class BinanceApiController {
     @Query('startTime') startTime?: string,
     @Query('endTime') endTime?: string,
   ) {
-    const response = await this.binanceApiService.getHistoricalData({
+    const rawResponse = await this.binanceApiService.getHistoricalData({
       interval,
       startTime,
       endTime,
     });
 
+    if (rawResponse.length === 0 || !rawResponse)
+      return 'No data for the given period of time';
+
     const analyzedData =
-      await this.binanceApiService.analyzeHistoricalData(response);
+      this.binanceApiService.analyzeHistoricalData(rawResponse);
 
     return analyzedData;
   }

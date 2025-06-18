@@ -3,8 +3,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom } from 'rxjs';
 import {
+  AnalyzedData,
   BinanceApiParams,
-  IbinanceHistoricalTrade,
+  BinanceKline,
 } from './interface/binance-api';
 import { AxiosError } from 'axios';
 
@@ -18,13 +19,13 @@ export class BinanceApiService {
 
   async getHistoricalData(
     ApiParams: BinanceApiParams,
-  ): Promise<IbinanceHistoricalTrade[]> {
+  ): Promise<BinanceKline[]> {
     const baseUrl = this.configService.getOrThrow<string>('BINANCE_API');
 
     try {
       const { data } = await firstValueFrom(
         this.httpService
-          .get<IbinanceHistoricalTrade[]>(`${baseUrl}/api/v3/klines`, {
+          .get<BinanceKline[]>(`${baseUrl}/api/v3/klines`, {
             params: {
               symbol: `${this.configService.getOrThrow<string>('SYMBOL')}`,
               limit: 200,
@@ -45,5 +46,27 @@ export class BinanceApiService {
     }
   }
 
-  async analyzeHistoricalData(data: IbinanceHistoricalTrade[]) {}
+  analyzeHistoricalData(data: BinanceKline[]): AnalyzedData[] {
+    const analyzedData: AnalyzedData[] = [];
+
+    for (let index = 1; index < data.length; index++) {
+      const current = data[index];
+      const previous = data[index - 1];
+      const currentPrice = parseFloat(current[4]);
+      const previousPrice = parseFloat(previous[4]);
+
+      const priceChange = currentPrice - previousPrice;
+      const percentageChange = (priceChange / previousPrice) * 100;
+      const directionOfChanges = priceChange > 0 ? 'UP' : 'DOWN';
+
+      analyzedData.push({
+        timestamp: current[0],
+        priceChange: parseFloat(priceChange.toFixed(2)),
+        percentageChange: parseFloat(percentageChange.toFixed(2)),
+        directionOfChanges,
+      });
+    }
+
+    return analyzedData;
+  }
 }
