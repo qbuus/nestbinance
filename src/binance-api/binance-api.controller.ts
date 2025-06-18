@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { BadRequestException, Controller, Get, Query } from '@nestjs/common';
 import { BinanceApiService } from './binance-api.service';
 
 @Controller('binance')
@@ -11,6 +11,10 @@ export class BinanceApiController {
     @Query('startTime') startTime?: string,
     @Query('endTime') endTime?: string,
   ) {
+    if (!interval) {
+      throw new BadRequestException('Query param: Interval is required');
+    }
+
     const rawResponse = await this.binanceApiService.getHistoricalData({
       interval,
       startTime,
