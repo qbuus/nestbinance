@@ -2,8 +2,9 @@ import { HttpService } from '@nestjs/axios';
 import { BinanceApiService } from './binance-api.service';
 import { ConfigService } from '@nestjs/config';
 import { of } from 'rxjs';
+import { BinanceKline, BinanceApiParams } from './interface/binance-api';
 
-const dummy_data = [
+const dummy_data: BinanceKline[] = [
   [
     1625097600000,
     '34000',
@@ -66,7 +67,7 @@ describe('BinanceApiService', () => {
           symbol: 'BTCUSDT',
           interval: '1d',
           limit: 200,
-        }),
+        }) as BinanceApiParams,
       }),
     );
   });
