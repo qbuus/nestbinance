@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: new ConsoleLogger({
-      colors: false,
+      colors: true,
       json: true,
       prefix: 'Binance API',
     }),
@@ -15,6 +15,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.use(helmet());
   app.enableCors();
+  app.setGlobalPrefix('api');
   await app.listen(configService.get<number>('PORT') ?? 3000);
 }
 bootstrap();
