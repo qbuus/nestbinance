@@ -68,9 +68,9 @@ export class BinanceApiService {
     return {
       timestampStart,
       timestampEnd,
-      totalHigh,
-      totalLow,
-      totalVolume,
+      totalHigh: totalHigh.toFixed(2),
+      totalLow: totalLow.toFixed(2),
+      totalVolume: totalVolume.toFixed(2),
     };
   }
 }
