@@ -32,6 +32,9 @@ Start with
 You can run both the backend and frontend simultaneously with
 `npm run start:dev`
 
+To run test
+`npn run test`
+
 ## 📡 API Endpoints
 
 ### `GET /api/binance/analyze`
