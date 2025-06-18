@@ -14,3 +14,10 @@ export type BinanceApiParams = {
   startTime?: string;
   endTime?: string;
 };
+
+export type AnalyzedData = {
+  timestamp: number;
+  priceChange: number;
+  percentageChange: number;
+  directionOfChanges: 'UP' | 'DOWN';
+};

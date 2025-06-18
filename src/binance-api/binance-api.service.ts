@@ -19,14 +19,14 @@ export class BinanceApiService {
   async getHistoricalData(
     ApiParams: BinanceApiParams,
   ): Promise<IbinanceHistoricalTrade[]> {
-    const baseUrl = this.configService.get<string>('BINANCE_API');
+    const baseUrl = this.configService.getOrThrow<string>('BINANCE_API');
 
     try {
       const { data } = await firstValueFrom(
         this.httpService
           .get<IbinanceHistoricalTrade[]>(`${baseUrl}/api/v3/klines`, {
             params: {
-              symbol: `${this.configService.get<string>('SYMBOL')}`,
+              symbol: `${this.configService.getOrThrow<string>('SYMBOL')}`,
               limit: 200,
               ...ApiParams,
             },
@@ -44,4 +44,6 @@ export class BinanceApiService {
       throw error;
     }
   }
+
+  async analyzeHistoricalData(data: IbinanceHistoricalTrade[]) {}
 }
