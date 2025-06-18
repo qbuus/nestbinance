@@ -46,27 +46,31 @@ export class BinanceApiService {
     }
   }
 
-  analyzeHistoricalData(data: BinanceKline[]): AnalyzedData[] {
-    const analyzedData: AnalyzedData[] = [];
-
-    for (let index = 1; index < data.length; index++) {
-      const current = data[index];
-      const previous = data[index - 1];
-      const currentPrice = parseFloat(current[4]);
-      const previousPrice = parseFloat(previous[4]);
-
-      const priceChange = currentPrice - previousPrice;
-      const percentageChange = (priceChange / previousPrice) * 100;
-      const directionOfChanges = priceChange > 0 ? 'UP' : 'DOWN';
-
-      analyzedData.push({
-        timestamp: current[0],
-        priceChange: parseFloat(priceChange.toFixed(2)),
-        percentageChange: parseFloat(percentageChange.toFixed(2)),
-        directionOfChanges,
-      });
+  analyzeHistoricalData(data: BinanceKline[]): AnalyzedData {
+    if (data.length < 2) {
+      throw new Error('Not enough data to analyze.');
     }
 
-    return analyzedData;
+    const length = data.length;
+    const timestampStart = data[0][0];
+    const timestampEnd = data[length - 1][0];
+
+    let totalHigh = 0;
+    let totalLow = 0;
+    let totalVolume = 0;
+
+    data.forEach((d) => {
+      totalHigh += parseFloat(d[2]);
+      totalLow += parseFloat(d[3]);
+      totalVolume += parseFloat(d[5]);
+    });
+
+    return {
+      timestampStart,
+      timestampEnd,
+      totalHigh,
+      totalLow,
+      totalVolume,
+    };
   }
 }

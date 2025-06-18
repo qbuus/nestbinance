@@ -5,10 +5,11 @@ export type BinanceApiParams = {
 };
 
 export type AnalyzedData = {
-  timestamp: number;
-  priceChange: number;
-  percentageChange: number;
-  directionOfChanges: 'UP' | 'DOWN';
+  timestampStart: number;
+  timestampEnd: number;
+  totalHigh: number;
+  totalLow: number;
+  totalVolume: number;
 };
 
 export type BinanceKline = [
