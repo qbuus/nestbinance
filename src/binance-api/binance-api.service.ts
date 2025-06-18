@@ -20,22 +20,28 @@ export class BinanceApiService {
     ApiParams: BinanceApiParams,
   ): Promise<IbinanceHistoricalTrade[]> {
     const baseUrl = this.configService.get<string>('BINANCE_API');
-    const { data } = await firstValueFrom(
-      this.httpService
-        .get<IbinanceHistoricalTrade[]>(`${baseUrl}/api/v3/klines`, {
-          params: {
-            symbol: `${this.configService.get<string>('SYMBOL')}`,
-            limit: 200,
-            ...ApiParams,
-          },
-        })
-        .pipe(
-          catchError((error: AxiosError) => {
-            this.logger.error(error.message);
-            throw new Error('An error happened!');
-          }),
-        ),
-    );
-    return data;
+
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService
+          .get<IbinanceHistoricalTrade[]>(`${baseUrl}/api/v3/klines`, {
+            params: {
+              symbol: `${this.configService.get<string>('SYMBOL')}`,
+              limit: 200,
+              ...ApiParams,
+            },
+          })
+          .pipe(
+            catchError((error: AxiosError) => {
+              this.logger.error(error.message);
+              throw new Error('An error happened!');
+            }),
+          ),
+      );
+      return data;
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
   }
 }

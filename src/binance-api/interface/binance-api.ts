@@ -10,7 +10,7 @@ export interface IbinanceHistoricalTrade {
 }
 
 export type BinanceApiParams = {
-  interval?: string;
+  interval: string;
   startTime?: string;
   endTime?: string;
 };

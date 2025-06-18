@@ -7,16 +7,16 @@ export class BinanceApiController {
 
   @Get('historical')
   async Historical(
-    @Query('interval') interval?: string,
+    @Query('interval') interval: string,
     @Query('startTime') startTime?: string,
     @Query('endTime') endTime?: string,
   ) {
-    const response = this.binanceApiService.getHistoricalData({
+    const response = await this.binanceApiService.getHistoricalData({
       interval,
       startTime,
       endTime,
     });
 
-    await response;
+    return response;
   }
 }
