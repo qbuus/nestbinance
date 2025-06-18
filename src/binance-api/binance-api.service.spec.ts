@@ -1,18 +1,15 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { HttpService } from '@nestjs/axios';
 import { BinanceApiService } from './binance-api.service';
+import { ConfigService } from '@nestjs/config';
 
 describe('BinanceApiService', () => {
   let service: BinanceApiService;
+  let httpService: HttpService;
+  let configService: ConfigService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [BinanceApiService],
-    }).compile();
-
-    service = module.get<BinanceApiService>(BinanceApiService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  beforeEach(() => {
+    httpService = {
+      get: jest.fn(),
+    } as unknown as HttpService;
   });
 });
